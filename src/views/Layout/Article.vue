@@ -1,46 +1,65 @@
 <template>
   <div class="article-page">
     <nav class="my-nav van-hairline--bottom">
-      <a
-        class="active"
-        href="javascript:;"
-        >推荐</a
-      >
-      <a
-        class="active"
-        href="javascript:;"
-        >最新</a
-      >
-      <div class="logo"><img src="@/assets/logo.png" alt=""></div>
+      <a href="javascript:;">推荐</a>
+      <a href="javascript:;">最新</a>
+      <div class="logo"><img src="@/assets/logo.png" alt="" /></div>
     </nav>
+
     <van-list
       v-model="loading"
       :finished="finished"
       finished-text="没有更多了"
       @load="onLoad"
+      :immediate-check="false"
     >
-
-      <ArticleItem></ArticleItem>
-
+      <article-item v-for="item in list" :key="item.id" :item="item"></article-item>
     </van-list>
   </div>
 </template>
 
 <script>
+import ArticleItem from '@/components/ArticleItem.vue'
 export default {
   name: 'article-page',
   data () {
     return {
+      list: [],
+      current: 1,
+      sorter: 'weight_desc',
       loading: false,
       finished: false
     }
   },
-  created () {
-  },
   methods: {
-    onLoad () {
-
+    async onLoad () {
+      this.current++
+      const res = await this.$axios({
+        url: '/interview/query',
+        params: {
+          current: this.current,
+          sorter: this.sorter
+        }
+      })
+      this.list.push(...res.data.rows)
+      this.loading = false
+      if (this.current === res.data.pageTotal) {
+        this.finished = true
+      }
     }
+  },
+  components: {
+    ArticleItem
+  },
+  async created () {
+    const res = await this.$axios({
+      url: '/interview/query',
+      params: {
+        current: this.current,
+        sorter: this.sorter
+      }
+    })
+    this.list = res.data.rows
   }
 }
 </script>
@@ -67,7 +86,7 @@ export default {
       position: relative;
       transition: all 0.3s;
       &::after {
-        content: '';
+        content: "";
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
