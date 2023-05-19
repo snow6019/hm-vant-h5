@@ -1,5 +1,5 @@
 <template>
-  <van-cell class="article-item">
+  <van-cell class="article-item" @click="go">
     <template #title>
       <div class="head">
         <img :src="item.avatar" alt="" />
@@ -20,7 +20,17 @@
 <script>
 export default {
   name: 'ArticleItem',
-  props: ['item']
+  props: ['item'],
+  methods: {
+    go () {
+      this.$router.push({
+        name: 'detail', // 不是路径
+        params: {
+          id: this.item.id
+        }
+      })
+    }
+  }
 }
 </script>
 

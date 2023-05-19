@@ -2,22 +2,23 @@
   <div class="detail-page">
     <van-nav-bar
       left-text="返回"
-      @click-left="xxx"
+      @click-left="$router.next()"
       fixed
       title="面经详细"
     />
     <header class="header">
-      <h1>xxx</h1>
+      <h1>{{ one.stem }}</h1>
       <p>
-        xxx | xxx 浏览量 |
-        xxx 点赞数
+        {{ one.createdAt }} | {{ one.views }} 浏览量 |
+        {{ one.likeCount }} 点赞数
       </p>
       <p>
-        <img src="xxx" alt="" />
-        <span>xxx</span>
+        <img :src="one.avatar" alt="" />
+        <span>{{ one.creator }}</span>
       </p>
     </header>
-    <main class="body"></main>
+
+    <main class="body" v-html="one.content"></main>
     <div class="opt">
       <van-icon class="active" name="like-o"/>
       <van-icon class="active" name="star-o"/>
@@ -27,7 +28,27 @@
 
 <script>
 export default {
-  name: 'detail-page'
+  name: 'detail-page',
+  data () {
+    return {
+      one: {}
+    }
+  },
+  async created () {
+    const id = this.$route.params.id
+    const { data } = await this.$axios({
+      url: 'interview/show',
+      params: {
+        id
+      }
+    })
+    this.one = data
+  },
+  methods: {
+    xxx () {
+
+    }
+  }
 }
 </script>
 

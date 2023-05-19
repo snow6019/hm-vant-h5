@@ -1,8 +1,18 @@
 <template>
   <div class="article-page">
     <nav class="my-nav van-hairline--bottom">
-      <a href="javascript:;">推荐</a>
-      <a href="javascript:;">最新</a>
+      <a
+        @click="changeSorter('weight_desc')"
+        :class="{ active: sorter === 'weight_desc' }"
+        href="javascript:;"
+        >推荐</a
+      >
+      <a
+        @click="changeSorter(null)"
+        :class="{ active: sorter === null }"
+        href="javascript:;"
+        >最新</a
+      >
       <div class="logo"><img src="@/assets/logo.png" alt="" /></div>
     </nav>
 
@@ -13,7 +23,11 @@
       @load="onLoad"
       :immediate-check="false"
     >
-      <article-item v-for="item in list" :key="item.id" :item="item"></article-item>
+      <article-item
+        v-for="item in list"
+        :key="item.id"
+        :item="item"
+      ></article-item>
     </van-list>
   </div>
 </template>
@@ -46,20 +60,29 @@ export default {
       if (this.current === res.data.pageTotal) {
         this.finished = true
       }
+    },
+    changeSorter (key) {
+      this.sorter = key
+      this.current = 1
+      this.finished = false
+      this.init()
+    },
+    async init () {
+      const res = await this.$axios({
+        url: '/interview/query',
+        params: {
+          current: this.current,
+          sorter: this.sorter
+        }
+      })
+      this.list = res.data.rows
     }
   },
   components: {
     ArticleItem
   },
-  async created () {
-    const res = await this.$axios({
-      url: '/interview/query',
-      params: {
-        current: this.current,
-        sorter: this.sorter
-      }
-    })
-    this.list = res.data.rows
+  created () {
+    this.init()
   }
 }
 </script>
