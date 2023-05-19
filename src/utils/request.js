@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { Toast } from 'vant'
 
 // 创建一个新的axios实例
 const request = axios.create({
@@ -21,6 +22,7 @@ request.interceptors.response.use(function (response) {
   return response.data
 }, function (error) {
   // 对响应错误做点什么
+  Toast.fail(error.response.data.message)
   return Promise.reject(error)
 })
 

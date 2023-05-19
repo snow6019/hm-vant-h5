@@ -32,4 +32,21 @@ const router = new VueRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  // to: 到哪去
+  // form: 从哪来
+  const token = localStorage.getItem('h5-token')
+  // 存在
+  if (token) {
+    next() // 能放行！
+  } else { // 没有登录
+    // 去的路由是 登录 或者注册
+    if (to.path === '/login' || to.path === '/register') {
+      next()
+    } else {
+      next('/login')
+    }
+  }
+})
+
 export default router

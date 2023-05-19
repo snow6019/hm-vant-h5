@@ -38,18 +38,16 @@ export default {
   },
   methods: {
     async onSubmit (values) {
-      try {
-        await this.$axios({ method: 'POST', url: '/user/register', data: values })
-        this.$toast.success('注册成功')
-        this.$router.push({ path: '/login' }) // 路由切换login
-      } catch (error) {
-        console.log(123)
-        console.log(error)
-        this.$toast.fail(error.response.data.message)
-      }
-      // await this.$axios({ method: 'POST', url: '/user/register', data: values })
-      // this.$toast.success('注册成功')
-      // this.$router.push({ path: '/login' }) // 路由切换login
+      // try {
+      //   await this.$axios({ method: 'POST', url: '/user/register', data: values })
+      //   this.$toast.success('注册成功')
+      //   this.$router.push({ path: '/login' })
+      // } catch (error) {
+      //   this.$toast.fail(error.response.data.message)
+      // }
+      await this.$axios({ method: 'POST', url: '/user/register', data: values })
+      this.$toast.success('注册成功')
+      this.$router.push({ path: '/login' })
     }
   }
 }
