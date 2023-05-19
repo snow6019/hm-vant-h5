@@ -2,7 +2,7 @@
   <div class="detail-page">
     <van-nav-bar
       left-text="返回"
-      @click-left="$router.next()"
+      @click-left="$router.back()"
       fixed
       title="面经详细"
     />
@@ -20,8 +20,8 @@
 
     <main class="body" v-html="one.content"></main>
     <div class="opt">
-      <van-icon class="active" name="like-o"/>
-      <van-icon class="active" name="star-o"/>
+      <van-icon :class="{active:one.likeFlag}" name="like-o" @click="like"/>
+      <van-icon :class="{active:one.collectFlag}" name="star-o" @click="collect"/>
     </div>
   </div>
 </template>
@@ -45,8 +45,35 @@ export default {
     this.one = data
   },
   methods: {
-    xxx () {
+    like () {
+      this.one.likeFlag = !this.one.likeFlag
 
+      this.$axios({
+        method: 'POST',
+        url: 'interview/opt',
+        data: {
+          id: this.one.id,
+          optType: 1
+        }
+      })
+
+      if (this.one.likeFlag) {
+        this.one.likeCount++
+      } else {
+        this.one.likeCount--
+      }
+    },
+    collect () {
+      this.one.collectFlag = !this.one.collectFlag
+
+      this.$axios({
+        method: 'POST',
+        url: 'interview/opt',
+        data: {
+          id: this.one.id,
+          optType: 2
+        }
+      })
     }
   }
 }

@@ -57,7 +57,7 @@ export default {
       })
       this.list.push(...res.data.rows)
       this.loading = false
-      if (this.current === res.data.pageTotal) {
+      if (this.current >= res.data.pageTotal) {
         this.finished = true
       }
     },
